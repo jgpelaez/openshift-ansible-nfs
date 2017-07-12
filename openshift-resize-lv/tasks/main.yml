@@ -1,0 +1,11 @@
+---
+
+- name: Resize logical-volume
+  lvol:
+    vg: "{{ vg_name }}"
+    lv: "{{ lv }}"
+    size: "{{ size }}g"
+    force: yes
+
+- name: manage_lvm | resizing filesystem
+  command: "resize2fs /dev/{{ vg_name }}/{{ lv }}"

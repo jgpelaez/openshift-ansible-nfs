@@ -1,0 +1,22 @@
+---
+- name: Install NFS server
+  package: name=nfs-utils state=present
+
+
+- name: Start rpcbind on Fedora/Red Hat
+  systemd:
+    name: rpcbind
+    state: started
+    enabled: yes
+
+- name: Start nfs on Fedora/Red Hat
+  systemd:
+    name: nfs-server
+    state: started
+    enabled: yes
+
+- name: Export the directories
+  lineinfile: dest=/etc/exports
+              regexp="^/exports/{{ vg_name }}/{{ lv_name }} "
+              line="/exports/{{ vg_name }}/{{ lv_name }} {{nfs_export_options}}"
+  notify: restart nfs

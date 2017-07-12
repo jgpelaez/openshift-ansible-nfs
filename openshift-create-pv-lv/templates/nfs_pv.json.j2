@@ -1,0 +1,26 @@
+{ 
+  "apiVersion": "v1",
+  "kind": "PersistentVolume",
+  "metadata": {
+    "name": "pv-{{ lv_name }}",
+    "labels": {
+    {% if backup %}  "backup": "true"
+    {% else %}  "backup": "false"
+    {% endif %}}
+  },
+  "spec": {
+    "capacity": {
+      "storage": "{{ size }}Gi"
+    },
+    "accessModes": [
+      "ReadWriteOnce"
+    ],
+    "persistentVolumeReclaimPolicy": "Recycle",
+    "nfs": {
+      "path": "/exports/{{ vg_name }}/{{ lv_name }}",
+      "server": "{{ node }}"
+    },
+    "backup": "True"
+  }
+}
+ 

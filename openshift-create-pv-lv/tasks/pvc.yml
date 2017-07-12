@@ -1,0 +1,12 @@
+---
+
+- name: export claim
+  uri:
+    url: "{{ kube_nfs_volumes_kubernetes_url }}/api/v1/namespaces/{{ openshift_namespace }}/persistentvolumeclaims"
+    method: POST
+    body: "{{ lookup('template', template_claim) }}"
+    body_format: json
+    status_code: 201
+    validate_certs: False
+    HEADER_Authorization: "Bearer {{ kubernetes_token }}"
+  when: do_Claim 

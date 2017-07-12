@@ -1,0 +1,76 @@
+---
+- include: centos.yml
+
+- name: copy template
+  template:
+    src: lv_name.j2
+    dest: /tmp/lv_name.txt
+
+- name: replace
+  replace:
+    name: /tmp/lv_name.txt
+    regexp: '-'
+    replace: ''
+    backup: no
+
+- name: replace
+  replace:
+    name: /tmp/lv_name.txt
+    regexp: '"'
+    replace: ''
+    backup: no
+
+- name: lv_name
+  shell: cat /tmp/lv_name.txt
+  register: result
+
+- name: debug
+  debug:
+    var: result
+    
+- name: save lv_name as a var
+  set_fact:
+    lv_name: "{{ result.stdout }}"
+ 
+- name: delete lv_name.txt
+  file:
+    path: /tmp/lv_name.txt
+    state: absent
+       
+- name: manage_lvm | creating new LVM volume group(s)
+  lvg:
+    vg: "{{ vg_name }}"
+    pvs: "{{ disk }}"
+    state: present
+
+- name: Add logical-volume
+  lvol:
+    vg: "{{ vg_name }}"
+    lv: "{{ lv_name }}"
+    force: yes
+    shrink: no
+    size: "{{ size }}g"
+
+- name: manage_lvm | creating new filesystem on new LVM logical volume(s)
+  filesystem:
+    fstype: ext4
+    dev: "/dev/{{ vg_name }}/{{ lv_name }}"
+    
+- name: manage_lvm | mounting new filesystem(s)
+  mount:
+    name: "/exports/{{ vg_name }}/{{ lv_name }}"
+    src: "/dev/{{ vg_name }}/{{ lv_name }}"
+    fstype: ext4
+    state: mounted
+    
+- name: manage_lvm | resizing filesystem
+  command: "resize2fs /dev/{{ vg_name }}/{{ lv_name }}"
+  
+- include: nfs.yml
+
+- include: permissions.yml
+                       
+- include: pv.yml
+
+- include: pvc.yml
+    

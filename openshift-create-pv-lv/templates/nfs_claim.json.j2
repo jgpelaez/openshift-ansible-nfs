@@ -1,0 +1,20 @@
+{ 
+  "apiVersion": "v1",
+  "kind": "PersistentVolumeClaim",
+  "metadata": {
+    "name": "{{ claim_name }}"
+  },
+  "spec": {
+    "accessModes": [
+      "ReadWriteOnce"
+    ],
+    "resources": {
+      "requests": {
+        "storage": "{{ size }}"
+       }
+    },
+    "volumeName": "pv-{{ lv_name }}"
+  }
+}
+ 
+

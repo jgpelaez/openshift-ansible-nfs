@@ -1,0 +1,12 @@
+---
+
+- name: export pv
+  uri:
+    url: "{{ kube_nfs_volumes_kubernetes_url }}/api/v1/persistentvolumes"
+    method: POST
+    body: "{{ lookup('template', template_pv) }}"
+    body_format: json
+    status_code: 201
+    HEADER_Authorization: "Bearer {{ kubernetes_token }}"
+    validate_certs: false
+  when: do_PV    

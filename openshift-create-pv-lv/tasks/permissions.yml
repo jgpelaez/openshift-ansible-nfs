@@ -1,0 +1,8 @@
+---
+- name: Ensure export directories exist and has permissions
+  file:
+    path: "/exports/{{ vg_name }}/{{ lv_name }}"
+    state: directory
+    mode: 0777
+    owner: nfsnobody
+    group: nfsnobody

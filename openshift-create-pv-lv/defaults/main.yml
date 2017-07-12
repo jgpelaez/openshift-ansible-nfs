@@ -1,0 +1,7 @@
+---
+vg_name: pv
+nfs_export_options: "*(rw,no_root_squash,insecure,no_subtree_check)"
+kube_api_version: v1
+template_pv: "../templates/nfs_pv.json.j2"
+template_claim: "../templates/nfs_claim.json.j2"
+

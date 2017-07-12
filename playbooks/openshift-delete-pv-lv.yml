@@ -1,0 +1,4 @@
+- hosts: "{{ node }}"
+  become: True
+  roles:
+    - { role: "../roles/openshift-delete-pv-lv" }
